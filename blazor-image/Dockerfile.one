@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0
+# Verzeichnis für die App
+WORKDIR /build
+# Kopiere das Projekt in das Arbeitsverzeichnis
+COPY . ./
+# Wiederherstellen der Abhängigkeiten
+RUN dotnet resore
+# Erstellen der App in Release Version
+RUN dotnet build -c Release --no-restore
+# Veröffentlichen der App in das Verzeichnis /app
+RUN dotnet publish -c Release --no-build --self-contained -o /app

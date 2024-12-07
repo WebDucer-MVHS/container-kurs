@@ -1,0 +1,40 @@
+# Liste der Services / Container
+services:
+  # Datenbank Container
+  db:
+    # Container image
+    image: postgres:17-alpine
+    # Umgebungsvariablen
+    environment:
+      POSTGRES_USER: 'devuser'
+      POSTGRES_PASSWORD: 'devpassword'
+      POSTGRES_DB: 'devdb'
+    # Port Mapping
+    ports:
+      - "5432:5432"
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 2s
+      retries: 10
+      start_period: 5s
+      timeout: 30s
+  dbAdmin:
+    # Container image
+    image: dpage/pgadmin4
+    # Abhängigkeiten
+    depends_on:
+      db:
+        condition: service_healthy
+    # Umgebungsvariablen
+    environment:
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: super-secret-password
+    # Port Mapping
+    ports:
+      - "8080:80"
+    # Volumes (Persistenter Speicher)
+    volumes:
+      - ./db.json:/pgadmin4/servers.json
