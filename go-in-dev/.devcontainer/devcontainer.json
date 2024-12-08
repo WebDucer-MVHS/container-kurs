@@ -1,0 +1,16 @@
+{
+  "name": "Go Development",
+  "image": "mcr.microsoft.com/devcontainers/go:1-1.23-bookworm",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "gopls": {
+          "ui.semanticTokens": true
+        }
+      },
+      "extensions": [
+        "golang.Go"
+      ]
+    }
+  }
+}

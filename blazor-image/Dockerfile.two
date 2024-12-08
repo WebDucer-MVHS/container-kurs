@@ -1,5 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0
-# Verzeichnis für die App
+# Image für Build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+# Verzeichnis für das Build
 WORKDIR /build
 # Kopiere das Projekt in das Arbeitsverzeichnis
 COPY . ./
@@ -7,10 +8,16 @@ COPY . ./
 RUN dotnet restore
 # Veröffentlichen der App in das Verzeichnis /app
 RUN dotnet publish BlazorWebAppMovies.csproj -c Release -o /app
+
+# Image für Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# Verzeichnis für die App
+WORKDIR /app
+# Kopieren des aus dem Build zu Runtime Image
+COPY --from=build /app .
 # Datenban Connecstion string
 ENV CONNECTIONSTRINGS__BLAZORWEBAPPMOVIESCONTEXT=""
 # Port für Webserver
 EXPOSE 8080
 # App in Container starten
-WORKDIR /app
 ENTRYPOINT ["dotnet", "BlazorWebAppMovies.dll"]

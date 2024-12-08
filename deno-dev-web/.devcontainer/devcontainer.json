@@ -1,0 +1,23 @@
+{
+    "name": "DENO Web Server",
+    "build": {
+		"dockerfile": "Dockerfile"
+	},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "justjavac.vscode-deno-extensionpack"
+            ],
+            "settings": {
+                "[typescript]": {
+                    "editor.defaultFormatter": "denoland.vscode-deno"
+                }
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/aws-cli:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "forwardPorts": [1080]
+}
