@@ -15,7 +15,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 # Kopieren des aus dem Build zu Runtime Image
 COPY --from=build /app .
-# Datenban Connecstion string
+# Datenbank Connection string
 ENV CONNECTIONSTRINGS__BLAZORWEBAPPMOVIESCONTEXT=""
 # Port für Webserver
 EXPOSE 8080

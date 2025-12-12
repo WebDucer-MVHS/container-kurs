@@ -7,10 +7,11 @@ COPY . ./
 RUN dotnet restore
 # Veröffentlichen der App in das Verzeichnis /app
 RUN dotnet publish BlazorWebAppMovies.csproj -c Release -o /app
-# Datenban Connecstion string
+# Arbeitsverzeichnis für Ausführung
+WORKDIR /app
+# Datenbank Connection string
 ENV CONNECTIONSTRINGS__BLAZORWEBAPPMOVIESCONTEXT=""
 # Port für Webserver
 EXPOSE 8080
-# App in Container starten
-WORKDIR /app
+# Start der .Net Anwendung
 ENTRYPOINT ["dotnet", "BlazorWebAppMovies.dll"]
