@@ -1,5 +1,5 @@
 # Image für Build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 # Verzeichnis für das Build
 WORKDIR /build
 # Kopiere das Projekt in das Arbeitsverzeichnis
@@ -10,11 +10,11 @@ RUN dotnet restore
 RUN dotnet publish BlazorWebAppMovies.csproj -c Release -o /app
 
 # Image für Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 # Labels
 LABEL version=1.0.0
-LABEL build_date=2024-12-01
-LABEL dotnet_version=9.0
+LABEL build_date=2025-12-14
+LABEL dotnet_version=10.0
 LABEL author=MVHS
 # Verzeichnis für die App
 WORKDIR /app
