@@ -3,7 +3,7 @@ services:
   # Datenbank Container
   db:
     # Container image
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     # Umgebungsvariablen
     environment:
       POSTGRES_USER: 'devuser'

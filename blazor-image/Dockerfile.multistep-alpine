@@ -7,7 +7,7 @@ COPY . ./
 # Wiederherstellen der Abhängigkeiten
 RUN dotnet restore
 # Veröffentlichen der App in das Verzeichnis /app
-RUN dotnet publish BlazorWebAppMovies.csproj -c Release -r linux-musl-arm64 -o /app
+RUN dotnet publish BlazorWebAppMovies.csproj -c Release -o /app
 
 # Image für Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine

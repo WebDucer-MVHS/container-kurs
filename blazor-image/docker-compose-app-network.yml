@@ -1,0 +1,69 @@
+# Liste der Services / Container
+services:
+  # Datenbank Container
+  db:
+    # Container image
+    image: postgres:18-alpine
+    # Umgebungsvariablen
+    environment:
+      POSTGRES_USER: 'devuser'
+      POSTGRES_PASSWORD: 'devpassword'
+      POSTGRES_DB: 'devdb'
+    # Port Mapping (wird nicht benötigt, da app und dbAdmin im selben Netzwerk sind und wir kein Zugriff von Host möchten)
+    # ports:
+    #   - "5432:5432"
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devuser -d devdb"]
+      interval: 2s
+      retries: 10
+      start_period: 5s
+      timeout: 30s
+    networks:
+      - backend
+  dbAdmin:
+    # Container image
+    image: dpage/pgadmin4
+    # Abhängigkeiten
+    depends_on:
+      db:
+        condition: service_healthy
+    # Umgebungsvariablen
+    environment:
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: super-secret-password
+    # Port Mapping
+    ports:
+      - "8080:80"
+    # Volumes (Persistenter Speicher)
+    volumes:
+      - ./db.json:/pgadmin4/servers.json
+    # Netzwerke: Benötigt backend für DB und Frontend für den Hostzugriff (incl Port Mapping)
+    networks:
+      - backend
+      - frontend
+  app:
+    # Container aus Dockerfile erstellen
+    image: blazor-movies:from-alpine
+    # Abhängigkeiten
+    depends_on:
+      db:
+        condition: service_healthy
+    # Umgebungsvariablen
+    environment:
+      CONNECTIONSTRINGS__BLAZORWEBAPPMOVIESCONTEXT: "Host=db;Database=devdb;Username=devuser;Password=devpassword"
+    # Port Mapping
+    ports:
+      - "1080:8080"
+    # Netzwerke: Benötigt backend für DB und Frontend für den Hostzugriff (incl Port Mapping)
+    networks:
+      - backend
+      - frontend
+
+# Netzwerke
+networks:
+  frontend:
+    driver: bridge
+  backend:

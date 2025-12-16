@@ -14,7 +14,7 @@ services:
       - "5432:5432"
     # Health Check
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U devuser -d devdb"]
       interval: 2s
       retries: 10
       start_period: 5s
@@ -38,3 +38,16 @@ services:
     # Volumes (Persistenter Speicher)
     volumes:
       - ./db.json:/pgadmin4/servers.json
+  app:
+    # Container aus Dockerfile erstellen
+    image: blazor-movies:from-alpine
+    # Abhängigkeiten
+    depends_on:
+      db:
+        condition: service_healthy
+    # Umgebungsvariablen
+    environment:
+      CONNECTIONSTRINGS__BLAZORWEBAPPMOVIESCONTEXT: "Host=db;Database=devdb;Username=devuser;Password=devpassword"
+    # Port Mapping
+    ports:
+      - "1080:8080"
